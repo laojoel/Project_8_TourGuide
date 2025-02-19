@@ -52,7 +52,7 @@
             <artifactId>gpsUtil</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/java/com/openclassrooms/tourguide/lib/GpsUtil.jar</systemPath>
+            <systemPath>${project.basedir}/lib/GpsUtil.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -60,14 +60,14 @@
             <artifactId>tripPricer</artifactId>
             <version>1.0.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/java/com/openclassrooms/tourguide/lib/TripPricer.jar</systemPath>
+            <systemPath>${project.basedir}/lib/TripPricer.jar</systemPath>
         </dependency>
 
         <dependency>
             <groupId>rewardCentral</groupId>
             <artifactId>rewardCentral</artifactId>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/java/com/openclassrooms/tourguide/lib/RewardCentral.jar</systemPath>
+            <systemPath>${project.basedir}/lib/RewardCentral.jar</systemPath>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
