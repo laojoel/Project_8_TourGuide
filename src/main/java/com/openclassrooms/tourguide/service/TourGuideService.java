@@ -1,6 +1,9 @@
 package com.openclassrooms.tourguide.service;
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.helper.Toolkit;
+import com.openclassrooms.tourguide.model.NearbyAttraction;
+import com.openclassrooms.tourguide.model.NearbyAttractions;
 import com.openclassrooms.tourguide.tracker.Tracker;
 import com.openclassrooms.tourguide.user.User;
 import com.openclassrooms.tourguide.user.UserReward;
@@ -11,6 +14,7 @@ import gpsUtil.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
@@ -85,15 +89,32 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
+	public NearbyAttractions getNearByAttractions(User user, int maxCount) {
+		Location userLocation = user.getLastVisitedLocation().location;
+
+		// Get all location with their associated distance to the given location
+		Hashtable<Object, Double> attractions = new Hashtable<>();
 		for (Attraction attraction : gpsUtil.getAttractions()) {
-			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
+			attractions.put(attraction, Toolkit.getLocationsDistance(attraction, userLocation));
 		}
 
-		return nearbyAttractions;
+		// sort them based on distance
+		List<Map.Entry<Object, Double>> sortedAttractions = new ArrayList<>(attractions.entrySet());
+		sortedAttractions.sort(Map.Entry.comparingByValue());
+
+		// build the output based on the [maxCount] nearest Attractions
+		NearbyAttractions output = new NearbyAttractions(userLocation);
+		for (int i=0; i<sortedAttractions.size(); i++) {
+
+			Attraction attraction = (Attraction)sortedAttractions.get(i).getKey();
+			double distance = sortedAttractions.get(i).getValue();
+			int rewardPoint = rewardsService.getRewardPoints(attraction, user);
+			output.add(new NearbyAttraction(attraction, distance, rewardPoint));
+
+			if (i==maxCount-1){break;}
+		}
+
+		return output;
 	}
 
 	private void addShutDownHook() {
