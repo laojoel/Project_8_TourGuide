@@ -9,6 +9,7 @@ import gpsUtil.location.VisitedLocation;
 import org.springframework.stereotype.Service;
 import rewardCentral.RewardCentral;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -38,12 +39,17 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		
-		for(VisitedLocation visitedLocation : userLocations) {
-			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if(nearAttraction(visitedLocation, attraction)) {
-						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+
+		// iterate backward with bounds Checking, allowing objects removal while looping without causing 'memory segment fault'
+		for (int i=userLocations.size()-1; i>=0; i--) {
+			if (i<userLocations.size()) { // bounds checking
+				VisitedLocation visitedLocation = userLocations.get(i);
+				for (int j=attractions.size()-1; j>=0; j--) {
+					if (j<attractions.size()) { // bounds checking
+						Attraction attraction = attractions.get(j);
+						if (nearAttraction(visitedLocation, attraction)) {
+							user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+						}
 					}
 				}
 			}
