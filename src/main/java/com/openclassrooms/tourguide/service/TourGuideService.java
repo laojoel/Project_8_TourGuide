@@ -21,6 +21,8 @@ import tripPricer.TripPricer;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -81,6 +83,32 @@ public class TourGuideService {
 				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 		user.setTripDeals(providers);
 		return providers;
+	}
+
+	public void trackMultipleUsersLocation(List<User> users) {
+		int progress = 0;
+		int total = users.size();
+
+		try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+			List<? extends Future<?>> futures = users.stream()
+					.map(user -> executor.submit(() -> { // Run each User reward calculation on a separate virtual thread
+						trackUserLocation(user);
+					}))
+					.toList();
+			for (Future<?> future : futures) { // wait for all virtual thread to complete his assigned task
+				try {
+					future.get();
+					if (TEST_MODE) { // test mode only to see the progress in percent
+						progress++;
+						System.out.println("trackMultipleUsersLocation | Progress " + progress + " / " + total + " (" + (int)((float)progress/(float)total*100.0f) + "%)");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); // executor exceptions
+		}
 	}
 
 	public VisitedLocation trackUserLocation(User user) {
