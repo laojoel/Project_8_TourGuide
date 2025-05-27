@@ -35,13 +35,6 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
 
-      # 5) Upload test reports and artifacts (optional, but useful for debugging and analyses)
-      - name: Archive build artifact
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: project_8_tourguide-jar
-          path: target/*.jar
 
   publish-to-github-packages:
     if: github.ref == 'refs/heads/main'
