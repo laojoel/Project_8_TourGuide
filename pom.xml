@@ -81,4 +81,12 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Owner Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/laojoel/Project_8_TourGuide</url>
+        </repository>
+    </distributionManagement>
+
 </project>
