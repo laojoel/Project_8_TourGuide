@@ -3,7 +3,6 @@ package com.openclassrooms.tourguide.helper;
 import gpsUtil.location.Location;
 
 public class Toolkit {
-    // shared across many services
     public static final boolean TEST_MODE = true;
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 

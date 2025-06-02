@@ -1,6 +1,5 @@
 package com.openclassrooms.tourguide.user;
 
-import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 

@@ -10,7 +10,6 @@ import gpsUtil.location.VisitedLocation;
 import org.springframework.stereotype.Service;
 import rewardCentral.RewardCentral;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,7 +18,6 @@ import static com.openclassrooms.tourguide.helper.Toolkit.TEST_MODE;
 
 @Service
 public class RewardsService {
-
 
 	// proximity in miles
     private int defaultProximityBuffer = 10;
@@ -54,7 +52,7 @@ public class RewardsService {
 			for (Future<?> future : futures) { // Wait for all virtual thread to complete his assigned task
 				try {
 					future.get();
-					if (TEST_MODE) { // test mode only to see the progress in percent
+					if (TEST_MODE) { // test mode used to see the progress in percent
 						progress++;
 						System.out.println("calculateMultipleRewards | Progress " + progress + " / " + total + " (" + (int)((float)progress/(float)total*100.0f) + "%)");
 					}
