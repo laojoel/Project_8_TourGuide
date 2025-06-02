@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+  packages: write  # Allows writing to GitHub Packages
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
