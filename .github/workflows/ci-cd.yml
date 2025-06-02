@@ -6,9 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+# Allows writing to GitHub Packages
 permissions:
   contents: read
-  packages: write  # Allows writing to GitHub Packages
+  packages: write
 
 jobs:
   build-and-test:
@@ -39,8 +40,15 @@ jobs:
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
 
-      # 5) Publish Packages to repository.
+      # 5) Publish Packages to repository
       - name: Publish to GitHub Packages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mvn --batch-mode deploy
+
+      # 6) Save up Artifact to repository (github-actions)
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: target/*.jar
