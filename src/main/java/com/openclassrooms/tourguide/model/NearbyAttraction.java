@@ -1,7 +1,10 @@
 package com.openclassrooms.tourguide.model;
 
-import gpsUtil.location.Attraction;
 
+import gpsUtil.location.Attraction;
+import lombok.Getter;
+
+@Getter
 public class NearbyAttraction {
     private String attractionName="";
     private double longitude=0.0, latitude=0.0;
@@ -15,4 +18,5 @@ public class NearbyAttraction {
         this.distance = distance;
         this.rewardPoint = rewardPoint;
     }
+
 }
